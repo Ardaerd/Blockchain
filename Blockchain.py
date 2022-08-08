@@ -25,11 +25,10 @@ class Blockchain:
         return self.chain[-1]
     
     def proof_of_work(self,previous_proof):
-        previous_proof = 4
         new_proof = 1
         check_proof = False
         
-        while check_proof is false :
+        while check_proof is False :
             hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
             
             if hash_operation[:4] == '0000':
