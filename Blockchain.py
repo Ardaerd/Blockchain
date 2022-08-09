@@ -87,7 +87,6 @@ blockchain = Blockchain()
 
 # Mining a new block
 @app.route('/mine_block', methods = ['GET'])
-
 def mine_block():
     previous_block = blockchain.get_previous_block()
     previous_proof = previous_block['proof']
@@ -102,4 +101,21 @@ def mine_block():
                 'previous_hash': block['previous_hash']}
     
     return jsonify(response), 200
+
+# Geting the chain 
+@app.route('/get_chain', methods = ['GET'])
+def get_chain():
+    response = {'chain': blockchain.chain,
+                'length': len(blockchain.chain)}
+    
+    return jsonify(response), 200
+
+# Running the app
+app.run(host = '0.0.0.0', port = 5000)
+
+
+
+
+
+
 
