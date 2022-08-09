@@ -16,7 +16,7 @@ class Blockchain:
     # Create new block and add it to the chain
     def create_block(self, proof, previous_hash):
         block = {'index': len(self.chain) + 1,
-                 'timestamp': str(datetime.datetime.now),
+                 'timestamp': str(datetime.datetime.now()),
                  'proof': proof,
                  'previous_hash': previous_hash}
         
@@ -64,7 +64,7 @@ class Blockchain:
             
             previous_proof = previous_block['proof']
             proof = block['proof']
-            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode).hexdigest()
+            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
             
             if hash_operation[:4] != '0000':
                 return False
@@ -108,6 +108,19 @@ def get_chain():
     response = {'chain': blockchain.chain,
                 'length': len(blockchain.chain)}
     
+    return jsonify(response), 200
+
+
+# Checking,if the Blockchain is valid
+@app.route('/is_valid', methods = ['GET'])
+def is_valid():
+    is_valid = blockchain.is_chain_valid(blockchain.chain)
+    
+    if is_valid:
+        response = {'message': 'All good. The blockchain is valid...'}
+    else:
+        response = {'message': 'We have a problem. The blockchain is not valid!'}
+        
     return jsonify(response), 200
 
 # Running the app
