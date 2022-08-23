@@ -16,6 +16,7 @@ class Blockchain:
 
     def __init__(self):
         self.chain = []
+        self.transaction = []
         self.create_block(proof=1, previous_hash='0')
 
     # Create new block and add it to the chain
@@ -24,8 +25,10 @@ class Blockchain:
         block = {'index': len(self.chain) + 1,
                  'timestamp': str(datetime.datetime.now()),
                  'proof': proof,
+                 'transaction': self.transaction,
                  'previous_hash': previous_hash}
 
+        self.transaction = []
         self.chain.append(block)
         return block
 
@@ -80,6 +83,16 @@ class Blockchain:
             block_index += 1
 
         return True
+
+    # Adding transaction to the transaction list
+    def add_transaction(self, sender, receiver, amount):
+        self.transaction.append({'sender': sender,
+                                'reciver': receiver,
+                                'amount': amount})
+        
+        previous_block = self.get_last_block()
+        return previous_block['index'] + 1
+
 
 
 # Part_2 - Mining our Blockchain
