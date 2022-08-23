@@ -18,6 +18,7 @@ class Blockchain:
         self.chain = []
         self.transaction = []
         self.create_block(proof=1, previous_hash='0')
+        self.nodes = set()
 
     # Create new block and add it to the chain
 
@@ -92,6 +93,11 @@ class Blockchain:
         
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
+
+    # Adding node to the blockchain
+    def add_node(self,address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url)
 
 
 
