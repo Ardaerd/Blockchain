@@ -5,15 +5,12 @@
 import datetime
 import hashlib
 import json
-from platform import node
-from urllib import response
 from flask import Flask, jsonify, request
 import requests
 from uuid import uuid4
 from urllib.parse import urlparse
 
 # Part_1 - Building a blockchain
-
 
 class Blockchain:
 
@@ -24,7 +21,6 @@ class Blockchain:
         self.nodes = set()
 
     # Create new block and add it to the chain
-
     def create_block(self, proof, previous_hash):
         block = {'index': len(self.chain) + 1,
                  'timestamp': str(datetime.datetime.now()),
@@ -37,9 +33,9 @@ class Blockchain:
         return block
 
     # returning last block
-
     def get_last_block(self):
         return self.chain[-1]
+
 
     # Finding new proof
     def proof_of_work(self, previous_proof):
@@ -57,13 +53,14 @@ class Blockchain:
 
         return new_proof
 
+
     # For hashing the block
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
-    # Check the conditions for a valid chain
 
+    # Check the conditions for a valid chain
     def is_chain_valid(self, chain):
         previous_block = chain[0]
         block_index = 1
@@ -202,7 +199,7 @@ def add_transaction():
 # Part_3 Decentalizing our Blockchain
 
 # Connecting new nodes
-@app.route('connect_node', methods=['POST'])
+@app.route('/connect_node', methods=['POST'])
 def connect_node():
     json = request.get_json()
     nodes = json.get('nodes')
@@ -222,7 +219,7 @@ def connect_node():
 
 
 # Replacing the chain by the longest chain if needed
-@app.route('replace_chain', methods=['GET'])
+@app.route('/replace_chain', methods=['GET'])
 def replace_chain():
     is_chain_replaced = blockchain.replace_chain()
 
@@ -234,7 +231,7 @@ def replace_chain():
         response = {'message': 'All good. The chain is the largest one.',
                     'actual_chain': blockchain.chain}
 
-    return jsonify(response), 200                
+    return jsonify(response), 200
 
 
 # Running the app
