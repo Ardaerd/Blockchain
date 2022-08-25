@@ -58,7 +58,6 @@ class Blockchain:
         return new_proof
 
     # For hashing the block
-
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
@@ -190,16 +189,36 @@ def add_transaction():
     json = requests.get_json()
     transaction_keys = ['sender', 'receiver', 'amount']
 
-    if not all (key in json for key in transaction_keys):
+    if not all(key in json for key in transaction_keys):
         return 'Some elements of transaction are missing!', 400
-    
-    index = blockchain.add_transaction(json['sender'],json['receiver'],json['amount'])
+
+    index = blockchain.add_transaction(
+        json['sender'], json['receiver'], json['amount'])
     response = {'message': f'This transaction will be added to block {index}'}
 
     return jsonify(response), 201
 
 
 # Part_3 Decentalizing our Blockchain
+
+# Connecting new nodes
+@app.route('connect_node', methods=['POST'])
+def connect_node():
+    json = requests.get_json()
+    nodes = json.get('nodes')
+
+    if nodes is not None:
+        return "No node", 400
+
+    for node in nodes:
+        blockchain.add_node(node)
+
+    response = {
+        'message': 'All the nodes are now connected. The firstCoin Blockchain now contains the following nodes:',
+        'total_nodes': list(blockchain.nodes)
+        }
+    
+    return jsonify(response), 201
 
 
 # Running the app
