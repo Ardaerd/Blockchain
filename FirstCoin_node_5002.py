@@ -87,7 +87,7 @@ class Blockchain:
     # Adding transaction to the transaction list
 
     def add_transaction(self, sender, receiver, amount):
-        self.transaction.append({'sender': sender,
+        self.transactions.append({'sender': sender,
                                 'reciver': receiver,
                                  'amount': amount})
 
@@ -97,7 +97,7 @@ class Blockchain:
     # Adding node to the blockchain
     def add_node(self, address):
         parsed_url = urlparse(address)
-        self.nodes.add(parsed_url)
+        self.nodes.add(parsed_url.netloc)
 
     # Replace the chain with the longest one
     def replace_chain(self):
@@ -106,7 +106,7 @@ class Blockchain:
         max_length = len(self.chain)
 
         for node in network:
-            response = requests.get(f'http://{node}/get_chain')
+            response = requests.get('http://{}/get_chain'.format(node))
 
             if response.status_code == 200:
                 length = response.json()['length']
@@ -144,7 +144,7 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender=node_address, receiver='Jeff Bezos', amount=1)
+    blockchain.add_transaction(sender=node_address, receiver='Bill Gates', amount=1)
     block = blockchain.create_block(proof, previous_hash)
 
     response = {'message': 'Congratulations, you just mine a block!',
@@ -204,7 +204,7 @@ def connect_node():
     json = request.get_json()
     nodes = json.get('nodes')
 
-    if nodes is not None:
+    if nodes is None:
         return "No node", 400
 
     for node in nodes:

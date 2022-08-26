@@ -25,8 +25,8 @@ class Blockchain:
         block = {'index': len(self.chain) + 1,
                  'timestamp': str(datetime.datetime.now()),
                  'proof': proof,
-                 'transactions': self.transactions,
-                 'previous_hash': previous_hash}
+                 'previous_hash': previous_hash,
+                 'transactions': self.transactions}
 
         self.transaction = []
         self.chain.append(block)
@@ -87,8 +87,8 @@ class Blockchain:
     # Adding transaction to the transaction list
 
     def add_transaction(self, sender, receiver, amount):
-        self.transaction.append({'sender': sender,
-                                'reciver': receiver,
+        self.transactions.append({'sender': sender,
+                                 'receiver': receiver,
                                  'amount': amount})
 
         previous_block = self.get_last_block()
@@ -97,7 +97,7 @@ class Blockchain:
     # Adding node to the blockchain
     def add_node(self, address):
         parsed_url = urlparse(address)
-        self.nodes.add(parsed_url)
+        self.nodes.add(parsed_url.netloc)
 
     # Replace the chain with the longest one
     def replace_chain(self):
@@ -106,7 +106,7 @@ class Blockchain:
         max_length = len(self.chain)
 
         for node in network:
-            response = requests.get(f'http://{node}/get_chain')
+            response = requests.get('http://{}/get_chain'.format(node))
 
             if response.status_code == 200:
                 length = response.json()['length']
@@ -116,7 +116,7 @@ class Blockchain:
                     max_length = length
                     longest_chain = chain
 
-        if longest_chain:
+        if longest_chain is not None:
             self.chain = longest_chain
             return True
 
@@ -130,7 +130,7 @@ app = Flask(__name__)
 
 
 # Creating an address for the node on Port 5000
-node_address = str(uuid4()).replace('-', ' ')
+node_address = str(uuid4()).replace('-','')
 
 
 # Creating a Blockchain
@@ -204,7 +204,7 @@ def connect_node():
     json = request.get_json()
     nodes = json.get('nodes')
 
-    if nodes is not None:
+    if nodes is None:
         return "No node", 400
 
     for node in nodes:

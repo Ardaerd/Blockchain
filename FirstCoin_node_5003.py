@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 # Part_1 - Building a blockchain
 
+
 class Blockchain:
 
     def __init__(self):
@@ -36,8 +37,8 @@ class Blockchain:
     def get_last_block(self):
         return self.chain[-1]
 
-
     # Finding new proof
+
     def proof_of_work(self, previous_proof):
         new_proof = 1
         check_proof = False
@@ -53,14 +54,14 @@ class Blockchain:
 
         return new_proof
 
-
     # For hashing the block
+
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
-
     # Check the conditions for a valid chain
+
     def is_chain_valid(self, chain):
         previous_block = chain[0]
         block_index = 1
@@ -87,8 +88,8 @@ class Blockchain:
     # Adding transaction to the transaction list
 
     def add_transaction(self, sender, receiver, amount):
-        self.transaction.append({'sender': sender,
-                                'reciver': receiver,
+        self.transactions.append({'sender': sender,
+                                  'reciver': receiver,
                                  'amount': amount})
 
         previous_block = self.get_last_block()
@@ -97,7 +98,7 @@ class Blockchain:
     # Adding node to the blockchain
     def add_node(self, address):
         parsed_url = urlparse(address)
-        self.nodes.add(parsed_url)
+        self.nodes.add(parsed_url.netloc)
 
     # Replace the chain with the longest one
     def replace_chain(self):
@@ -106,7 +107,7 @@ class Blockchain:
         max_length = len(self.chain)
 
         for node in network:
-            response = requests.get(f'http://{node}/get_chain')
+            response = requests.get('http://{}/get_chain'.format(node))
 
             if response.status_code == 200:
                 length = response.json()['length']
@@ -204,7 +205,7 @@ def connect_node():
     json = request.get_json()
     nodes = json.get('nodes')
 
-    if nodes is not None:
+    if nodes is None:
         return "No node", 400
 
     for node in nodes:
