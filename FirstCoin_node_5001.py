@@ -28,7 +28,7 @@ class Blockchain:
                  'previous_hash': previous_hash,
                  'transactions': self.transactions}
 
-        self.transaction = []
+        self.transactions = []
         self.chain.append(block)
         return block
 
@@ -106,11 +106,12 @@ class Blockchain:
         max_length = len(self.chain)
 
         for node in network:
-            response = requests.get('http://{}/get_chain'.format(node))
+            response = requests.get(f'http://{node}/get_chain')
 
             if response.status_code == 200:
                 length = response.json()['length']
                 chain = response.json()['chain']
+                print(length)
 
                 if length > max_length and self.is_chain_valid(chain):
                     max_length = length
@@ -163,7 +164,7 @@ def get_chain():
     response = {'chain': blockchain.chain,
                 'length': len(blockchain.chain)}
 
-    return jsonify(response), 200
+    return jsonify(response),200
 
 
 # Checking,if the Blockchain is valid

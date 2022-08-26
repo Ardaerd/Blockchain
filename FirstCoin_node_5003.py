@@ -29,7 +29,7 @@ class Blockchain:
                  'transactions': self.transactions,
                  'previous_hash': previous_hash}
 
-        self.transaction = []
+        self.transactions = []
         self.chain.append(block)
         return block
 
@@ -107,7 +107,7 @@ class Blockchain:
         max_length = len(self.chain)
 
         for node in network:
-            response = requests.get('http://{}/get_chain'.format(node))
+            response = requests.get(f'http://{node}/get_chain')
 
             if response.status_code == 200:
                 length = response.json()['length']
