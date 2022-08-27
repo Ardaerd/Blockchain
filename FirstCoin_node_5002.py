@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 # Part_1 - Building a blockchain
 
+
 class Blockchain:
 
     def __init__(self):
@@ -28,7 +29,7 @@ class Blockchain:
                  'transactions': self.transactions,
                  'previous_hash': previous_hash}
 
-        self.transaction = []
+        self.transactions = []
         self.chain.append(block)
         return block
 
@@ -36,8 +37,8 @@ class Blockchain:
     def get_last_block(self):
         return self.chain[-1]
 
-
     # Finding new proof
+
     def proof_of_work(self, previous_proof):
         new_proof = 1
         check_proof = False
@@ -53,14 +54,14 @@ class Blockchain:
 
         return new_proof
 
-
     # For hashing the block
+
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
-
     # Check the conditions for a valid chain
+
     def is_chain_valid(self, chain):
         previous_block = chain[0]
         block_index = 1
@@ -88,8 +89,8 @@ class Blockchain:
 
     def add_transaction(self, sender, receiver, amount):
         self.transactions.append({'sender': sender,
-                                'reciver': receiver,
-                                 'amount': amount})
+                                  'receiver': receiver,
+                                  'amount': amount})
 
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
@@ -144,7 +145,8 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender=node_address, receiver='Bill Gates', amount=1)
+    blockchain.add_transaction(
+        sender=node_address, receiver='Bill Gates', amount=1)
     block = blockchain.create_block(proof, previous_hash)
 
     response = {'message': 'Congratulations, you just mine a block!',
@@ -157,7 +159,7 @@ def mine_block():
     return jsonify(response), 200
 
 
-# Geting the chain
+# Getting the chain
 @app.route('/get_chain', methods=['GET'])
 def get_chain():
     response = {'chain': blockchain.chain,
@@ -196,7 +198,7 @@ def add_transaction():
     return jsonify(response), 201
 
 
-# Part_3 Decentalizing our Blockchain
+# Part_3 Decentralizing our Blockchain
 
 # Connecting new nodes
 @app.route('/connect_node', methods=['POST'])

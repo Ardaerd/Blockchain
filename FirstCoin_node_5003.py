@@ -89,8 +89,8 @@ class Blockchain:
 
     def add_transaction(self, sender, receiver, amount):
         self.transactions.append({'sender': sender,
-                                  'reciver': receiver,
-                                 'amount': amount})
+                                  'receiver': receiver,
+                                  'amount': amount})
 
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
@@ -158,7 +158,7 @@ def mine_block():
     return jsonify(response), 200
 
 
-# Geting the chain
+# Getting the chain
 @app.route('/get_chain', methods=['GET'])
 def get_chain():
     response = {'chain': blockchain.chain,

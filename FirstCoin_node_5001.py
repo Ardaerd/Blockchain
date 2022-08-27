@@ -197,7 +197,7 @@ def add_transaction():
     return jsonify(response), 201
 
 
-# Part_3 Decentalizing our Blockchain
+# Part_3 Decentralizing our Blockchain
 
 # Connecting new nodes
 @app.route('/connect_node', methods=['POST'])
