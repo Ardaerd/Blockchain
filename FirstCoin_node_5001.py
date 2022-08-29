@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 # Part_1 - Building a blockchain
 
+
 class Blockchain:
 
     def __init__(self):
@@ -36,8 +37,8 @@ class Blockchain:
     def get_last_block(self):
         return self.chain[-1]
 
-
     # Finding new proof
+
     def proof_of_work(self, previous_proof):
         new_proof = 1
         check_proof = False
@@ -53,14 +54,14 @@ class Blockchain:
 
         return new_proof
 
-
     # For hashing the block
+
     def hash(self, block):
         encoded_block = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(encoded_block).hexdigest()
 
-
     # Check the conditions for a valid chain
+
     def is_chain_valid(self, chain):
         previous_block = chain[0]
         block_index = 1
@@ -89,7 +90,7 @@ class Blockchain:
     def add_transaction(self, sender, receiver, amount):
         self.transactions.append({'sender': sender,
                                  'receiver': receiver,
-                                 'amount': amount})
+                                  'amount': amount})
 
         previous_block = self.get_last_block()
         return previous_block['index'] + 1
@@ -131,7 +132,7 @@ app = Flask(__name__)
 
 
 # Creating an address for the node on Port 5000
-node_address = str(uuid4()).replace('-','')
+node_address = str(uuid4()).replace('-', '')
 
 
 # Creating a Blockchain
@@ -145,7 +146,8 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender=node_address, receiver='Elon Musk', amount=1)
+    blockchain.add_transaction(
+        sender=node_address, receiver='Elon Musk', amount=1)
     block = blockchain.create_block(proof, previous_hash)
 
     response = {'message': 'Congratulations, you just mine a block!',
@@ -164,7 +166,7 @@ def get_chain():
     response = {'chain': blockchain.chain,
                 'length': len(blockchain.chain)}
 
-    return jsonify(response),200
+    return jsonify(response), 200
 
 
 # Checking,if the Blockchain is valid
